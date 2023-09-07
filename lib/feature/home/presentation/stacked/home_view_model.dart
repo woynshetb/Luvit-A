@@ -1,17 +1,12 @@
-import 'dart:convert';
-
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:luvit/constants/app_constants.dart';
-import 'package:luvit/constants/app_urls.dart';
-import 'package:luvit/core/stacked/base.view_model.dart';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:luvit/feature/home/data/model/card_model.dart';
+import 'package:stacked/stacked.dart';
 
-class HomeViewModel extends MyBaseViewModel {
-  HomeViewModel(BuildContext context) {
-    viewContext = context;
-  }
+class HomeViewModel extends BaseViewModel {
+  final BuildContext context;
+  HomeViewModel(BuildContext this.context);
   var pageController = ScrollController();
 
   DatabaseReference ref = FirebaseDatabase.instance.ref("data");
@@ -22,7 +17,7 @@ class HomeViewModel extends MyBaseViewModel {
   @override
   initialise() async {
     setBusy(true);
-    super.initialise();
+
     stream = ref.onValue;
     setBusy(false);
   }

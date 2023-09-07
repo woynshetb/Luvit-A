@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:luvit/core/stacked/base.view_model.dart';
+
 import 'package:luvit/feature/home/presentation/view/home_page.dart';
+import 'package:stacked/stacked.dart';
 
-class AppBaseViewModel extends MyBaseViewModel {
-  AppBaseViewModel(BuildContext context) {
-    viewContext = context;
-  }
-
+class AppBaseViewModel extends BaseViewModel {
+  AppBaseViewModel(BuildContext this.context);
+  final BuildContext context;
   int currentIndex = 0;
 
   final List<Widget> pages = const [
@@ -16,10 +15,4 @@ class AppBaseViewModel extends MyBaseViewModel {
     Text("Chat"),
     Text("Profile"),
   ];
-  @override
-  initialise() {
-    setBusy(true);
-    super.initialise();
-    setBusy(false);
-  }
 }
