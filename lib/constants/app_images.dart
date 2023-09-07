@@ -8,4 +8,7 @@ class AppImages {
   static const appbarlocationIcon = "assets/images/appbar_location.png";
   static const appBarStarIcon = "assets/images/appbar_star.png";
   static const notificationIcon = "assets/images/notification.png";
+  static const greyStar = "assets/images/grey.png";
+  static const heart = "assets/images/heart.png";
+  static const love = "assets/images/love.png";
 }

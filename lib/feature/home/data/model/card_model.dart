@@ -1,6 +1,5 @@
 class CardData {
   int? age;
-
   String? description;
   List<String> images = [];
   int? likeCount;

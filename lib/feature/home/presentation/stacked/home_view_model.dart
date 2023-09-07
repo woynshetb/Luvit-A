@@ -12,11 +12,11 @@ class HomeViewModel extends MyBaseViewModel {
   HomeViewModel(BuildContext context) {
     viewContext = context;
   }
-  var pageController = PageController(initialPage: 0);
+  var pageController = ScrollController();
+
   DatabaseReference ref = FirebaseDatabase.instance.ref("data");
   List<CardData> cardDatas = [];
   late Stream<DatabaseEvent> stream;
-  double sliderValue = 50;
   int currentImageIndex = 0;
   @override
   initialise() async {

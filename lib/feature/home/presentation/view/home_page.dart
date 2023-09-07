@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
           return Scaffold(
             body: SafeArea(
               child: Column(
-                
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
                     height: 50,
@@ -133,8 +133,9 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   Container(
-                       height: 600,
-                       width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 25),
+                    height: 600,
+                    width: double.infinity,
                     child: StreamBuilder<DatabaseEvent>(
                         stream: viewmodel.stream,
                         builder: (context, snapshot) {
@@ -147,38 +148,44 @@ class _HomePageState extends State<HomePage> {
                               viewmodel.onParseData(snapshot.data!);
                               return ListView.builder(
                                   itemCount: viewmodel.cardDatas.length,
+                                  controller: viewmodel.pageController,
                                   scrollDirection: Axis.horizontal,
+                                  //  physics: NeverScrollableScrollPhysics(),
                                   shrinkWrap: false,
                                   itemBuilder: (context, index) {
-                                    return Container(
-                                      width: 340,
-                                      height: 600,
-                                      margin:
-                                          EdgeInsets.symmetric(horizontal: 10),
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            20,
-                                          ),
-                                          border: Border.all(
-                                            color: Color(0xff3A3A3A),
-                                          )),
-                                      child: Stack(
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () {
-                                              viewmodel.currentImageIndex = 1 +
-                                                  viewmodel.currentImageIndex;
-                                              viewmodel.notifyListeners();
-                                            },
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(999),
+                                    return GestureDetector(
+                                      onTap: () {},
+                                      child: Container(
+                                        width: 340,
+                                        height: 600,
+                                        margin: const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                        ),
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              20,
+                                            ),
+                                            border: Border.all(
+                                              color: Color(0xff3A3A3A),
+                                            )),
+                                        child: Stack(
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                viewmodel.currentImageIndex =
+                                                    1 +
+                                                        viewmodel
+                                                            .currentImageIndex;
+                                                viewmodel.notifyListeners();
+                                              },
                                               child: Container(
                                                 width: 340,
                                                 height: 600,
-                                                decoration: const BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                ),
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                  20,
+                                                )),
                                                 child: CachedNetworkImage(
                                                   imageUrl: viewmodel
                                                       .cardDatas[index]
@@ -199,7 +206,9 @@ class _HomePageState extends State<HomePage> {
                                                             RoundedRectangleBorder(
                                                           borderRadius:
                                                               BorderRadius
-                                                                  .circular(8),
+                                                                  .circular(
+                                                            20,
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
@@ -212,52 +221,82 @@ class _HomePageState extends State<HomePage> {
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                          Positioned(
-                                            top: 16,
-                                            left: 20,
-                                            child: Container(
-                                              width: 300,
-                                              alignment: Alignment.topCenter,
-                                              child: AnimatedSmoothIndicator(
-                                                activeIndex:
-                                                    viewmodel.currentImageIndex,
-                                                count: viewmodel
-                                                    .cardDatas[index]
-                                                    .images
-                                                    .length,
-                                                curve: Curves.easeOutSine,
-                                                effect:
-                                                    const CustomizableEffect(
-                                                  spacing: 4,
-                                                  dotDecoration: DotDecoration(
-                                                    height: 3,
-                                                    width: 56.8,
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                1000)),
-                                                    color: Color(
-                                                      0xff202020,
+                                            Positioned(
+                                              top: 16,
+                                              left: 20,
+                                              child: Container(
+                                                width: 300,
+                                                alignment: Alignment.topCenter,
+                                                child: AnimatedSmoothIndicator(
+                                                  activeIndex: viewmodel
+                                                      .currentImageIndex,
+                                                  count: viewmodel
+                                                      .cardDatas[index]
+                                                      .images
+                                                      .length,
+                                                  curve: Curves.easeOutSine,
+                                                  effect:
+                                                      const CustomizableEffect(
+                                                    spacing: 4,
+                                                    dotDecoration:
+                                                        DotDecoration(
+                                                      height: 3,
+                                                      width: 56.8,
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  1000)),
+                                                      color: Color(
+                                                        0xff202020,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  activeDotDecoration:
-                                                      DotDecoration(
-                                                    height: 3,
-                                                    width: 56.8,
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                1000)),
-                                                    color: Color(
-                                                      0xffFF006B,
+                                                    activeDotDecoration:
+                                                        DotDecoration(
+                                                      height: 3,
+                                                      width: 56.8,
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                        Radius.circular(
+                                                          1000,
+                                                        ),
+                                                      ),
+                                                      color: Color(
+                                                        0xffFF006B,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                          )
-                                        ],
+                                            Positioned(
+                                              bottom: 0,
+                                              child: Visibility(
+                                                visible: viewmodel
+                                                        .currentImageIndex ==
+                                                    0,
+                                                child: MainProfileBodyOne(),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              bottom: 0,
+                                              child: Visibility(
+                                                visible: viewmodel
+                                                        .currentImageIndex ==
+                                                    1,
+                                                child: MainProfileBodyTwo(),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              bottom: 0,
+                                              child: Visibility(
+                                                visible: viewmodel
+                                                        .currentImageIndex ==
+                                                    2,
+                                                child: MainProfileBodyThree(),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     );
                                   });
@@ -275,44 +314,460 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class ImageSliderWidget extends StatelessWidget {
-  final List<String> images = [
-    'https://example.com/image1.jpg',
-    'https://example.com/image2.jpg',
-    'https://example.com/image3.jpg',
-    // Add more image URLs as needed
-  ];
+class MainProfileBodyOne extends StatelessWidget {
+  const MainProfileBodyOne({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return CarouselSlider(
-      options: CarouselOptions(
-        height: 200.0,
-        enlargeCenterPage: true,
-        autoPlay: true,
-        aspectRatio: 16 / 9,
-        autoPlayCurve: Curves.fastOutSlowIn,
-        enableInfiniteScroll: true,
-        autoPlayAnimationDuration: Duration(milliseconds: 800),
-        viewportFraction: 0.8,
-      ),
-      items: images.map((item) {
-        return Builder(
-          builder: (BuildContext context) {
-            return Container(
-              width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.symmetric(horizontal: 5.0),
-              decoration: BoxDecoration(
-                color: Colors.amber,
+    return Column(
+      children: [
+        Container(
+          width: 292,
+          margin: EdgeInsets.symmetric(horizontal: 25),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 30,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: Color(0xff000000),
+                        border: Border.all(width: 1, color: Color(0xff212121))),
+                    padding:
+                        EdgeInsets.only(top: 5, right: 10, bottom: 5, left: 6),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Image.asset(
+                              AppImages.greyStar,
+                              width: 14,
+                              height: 14,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                        const Text(
+                          "29,930",
+                          style: TextStyle(
+                            fontFamily: 'Pretendard',
+                            fontSize: 14.0,
+                            height: 16.7 / 14,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xffFCFCFC),
+                            letterSpacing: -0.6,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  RichText(
+                    text: TextSpan(
+                      text: '잭과분홍콩나물 ',
+                      style: TextStyle(
+                        color: Color(0xffFCFCFC),
+                        fontFamily: "Pretendard",
+                        fontSize: 28,
+                        height: 33.6 / 28,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      children: const <TextSpan>[
+                        TextSpan(
+                            text: '25',
+                            style: TextStyle(
+                              color: Color(0xffFCFCFC),
+                              fontFamily: "Pretendard",
+                              fontSize: 24,
+                              height: 28.8 / 24,
+                              fontWeight: FontWeight.w300,
+                            )),
+                      ],
+                    ),
+                  ),
+                  RichText(
+                    text: TextSpan(
+                      text: '서 ',
+                      style: TextStyle(
+                        color: Color(0xffFCFCFC),
+                        fontFamily: "Pretendard",
+                        fontSize: 15,
+                        height: 22.5 / 15,
+                        fontWeight: FontWeight.w300,
+                      ),
+                      children: const <TextSpan>[
+                        TextSpan(
+                          text: ' . ',
+                        ),
+                        TextSpan(
+                          text: '2km 거리에 있음',
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              child: Image.network(
-                item,
+              SizedBox(),
+              Image.asset(
+                AppImages.heart,
+                width: 48,
+                height: 48,
                 fit: BoxFit.cover,
+              )
+            ],
+          ),
+        ),
+        Container(
+          width: 340,
+          height: 60,
+          decoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.05),
+          ),
+          child: Icon(
+            Icons.keyboard_arrow_down,
+            color: Colors.white,
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class MainProfileBodyTwo extends StatelessWidget {
+  const MainProfileBodyTwo({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          width: 292,
+          margin: EdgeInsets.symmetric(horizontal: 25),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Container(
+                width: 226,
+                child: Wrap(
+                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 30,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          color: Color(0xff000000),
+                          border:
+                              Border.all(width: 1, color: Color(0xff212121))),
+                      padding: EdgeInsets.only(
+                          top: 5, right: 10, bottom: 5, left: 6),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Image.asset(
+                                AppImages.greyStar,
+                                width: 14,
+                                height: 14,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                          const Text(
+                            "29,930",
+                            style: TextStyle(
+                              fontFamily: 'Pretendard',
+                              fontSize: 14.0,
+                              height: 16.7 / 14,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xffFCFCFC),
+                              letterSpacing: -0.6,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    RichText(
+                      text: TextSpan(
+                        text: '잭과분홍콩나물 ',
+                        style: TextStyle(
+                          color: Color(0xffFCFCFC),
+                          fontFamily: "Pretendard",
+                          fontSize: 28,
+                          height: 33.6 / 28,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        children: const <TextSpan>[
+                          TextSpan(
+                              text: '25',
+                              style: TextStyle(
+                                color: Color(0xffFCFCFC),
+                                fontFamily: "Pretendard",
+                                fontSize: 24,
+                                height: 28.8 / 24,
+                                fontWeight: FontWeight.w300,
+                              )),
+                        ],
+                      ),
+                    ),
+                    Wrap(
+                      children: [
+                        Text(
+                          '서로 아껴주고 힘이 되어줄 사람 찾아요 선릉으로 직장 다니고 있고 여행 좋아해요 이상한 이야기하시는 분 바로 차단입니다',
+                          overflow: TextOverflow.fade,
+                          style: TextStyle(
+                            color: Color(0xffFCFCFC),
+                            fontFamily: "Pretendard",
+                            fontSize: 15,
+                            height: 22.5 / 15,
+                            fontWeight: FontWeight.w300,
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                ),
               ),
-            );
-          },
-        );
-      }).toList(),
+              SizedBox(),
+              Image.asset(
+                AppImages.heart,
+                width: 48,
+                height: 48,
+                fit: BoxFit.cover,
+              )
+            ],
+          ),
+        ),
+        Container(
+          width: 340,
+          height: 60,
+          decoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.05),
+          ),
+          child: Icon(
+            Icons.keyboard_arrow_down,
+            color: Colors.white,
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class MainProfileBodyThree extends StatelessWidget {
+  const MainProfileBodyThree({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          width: 292,
+          margin: EdgeInsets.symmetric(horizontal: 25),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Container(
+                width: 226,
+                child: Wrap(
+                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 30,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          color: Color(0xff000000),
+                          border:
+                              Border.all(width: 1, color: Color(0xff212121))),
+                      padding: EdgeInsets.only(
+                          top: 5, right: 10, bottom: 5, left: 6),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Image.asset(
+                                AppImages.greyStar,
+                                width: 14,
+                                height: 14,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                          const Text(
+                            "29,930",
+                            style: TextStyle(
+                              fontFamily: 'Pretendard',
+                              fontSize: 14.0,
+                              height: 16.7 / 14,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xffFCFCFC),
+                              letterSpacing: -0.6,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    RichText(
+                      text: TextSpan(
+                        text: '잭과분홍콩나물 ',
+                        style: TextStyle(
+                          color: Color(0xffFCFCFC),
+                          fontFamily: "Pretendard",
+                          fontSize: 28,
+                          height: 33.6 / 28,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        children: const <TextSpan>[
+                          TextSpan(
+                              text: '25',
+                              style: TextStyle(
+                                color: Color(0xffFCFCFC),
+                                fontFamily: "Pretendard",
+                                fontSize: 24,
+                                height: 28.8 / 24,
+                                fontWeight: FontWeight.w300,
+                              )),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    Container(
+                      height: 41,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          color: Color(0xff621133).withOpacity(0.7),
+                          border:
+                              Border.all(width: 1, color: Color(0xffFF016B))),
+                      padding: EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 12,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Image.asset(
+                                AppImages.love,
+                                width: 14,
+                                height: 14,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                          const Text(
+                            "진지한 연애를 찾는 중",
+                            style: TextStyle(
+                              fontFamily: 'Pretendard',
+                              fontSize: 14.0,
+                              height: 16.7 / 14,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xffFF006B),
+                              letterSpacing: -0.6,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    Wrap(
+                      children: List.generate(
+                        4,
+                        (index) => Container(
+                          height: 30,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              color: Color(0xff000000),
+                              border: Border.all(
+                                  width: 1, color: Color(0xff212121))),
+                          padding: EdgeInsets.only(
+                              top: 5, right: 10, bottom: 5, left: 6),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Image.asset(
+                                    AppImages.greyStar,
+                                    width: 14,
+                                    height: 14,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
+                              const Text(
+                                "29,4034",
+                                style: TextStyle(
+                                  fontFamily: 'Pretendard',
+                                  fontSize: 14.0,
+                                  height: 16.7 / 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Color(0xffFCFCFC),
+                                  letterSpacing: -0.6,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(),
+              Image.asset(
+                AppImages.heart,
+                width: 48,
+                height: 48,
+                fit: BoxFit.cover,
+              )
+            ],
+          ),
+        ),
+        Container(
+          width: 340,
+          height: 60,
+          decoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.05),
+          ),
+          child: Icon(
+            Icons.keyboard_arrow_down,
+            color: Colors.white,
+          ),
+        )
+      ],
     );
   }
 }
