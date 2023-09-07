@@ -8,7 +8,7 @@ class AppBaseViewModel extends BaseViewModel {
   final BuildContext context;
   int currentIndex = 0;
 
-  final List<Widget> pages = const [
+   List<Widget> pages = const [
     HomePage(),
     Text("Location"),
     Text("Star"),

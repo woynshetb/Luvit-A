@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:luvit/constants/app_images.dart';
+import 'package:luvit/feature/home/data/model/card_model.dart';
 import 'package:luvit/feature/home/presentation/stacked/home_view_model.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -30,8 +31,8 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   Container(
                     height: 50,
-                    padding:
-                        EdgeInsets.only(top: 5, right: 0, bottom: 5, left: 8),
+                    padding: const EdgeInsets.only(
+                        top: 5, right: 0, bottom: 5, left: 8),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -62,7 +63,7 @@ class _HomePageState extends State<HomePage> {
                           ],
                         ),
                         Container(
-                          margin: EdgeInsets.only(right: 4),
+                          margin: const EdgeInsets.only(right: 4),
                           height: 40,
                           width: 134,
                           child: Row(
@@ -71,10 +72,11 @@ class _HomePageState extends State<HomePage> {
                                 height: 30,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(100),
-                                    color: Color(0xff000000),
+                                    color: const Color(0xff000000),
                                     border: Border.all(
-                                        width: 1, color: Color(0xff212121))),
-                                padding: EdgeInsets.only(
+                                        width: 1,
+                                        color: const Color(0xff212121))),
+                                padding: const EdgeInsets.only(
                                     top: 5, right: 10, bottom: 5, left: 6),
                                 child: Align(
                                   alignment: Alignment.center,
@@ -150,54 +152,30 @@ class _HomePageState extends State<HomePage> {
                                 scrollDirection: Axis.horizontal,
                                 children: List.generate(
                                   viewmodel.cardDatas.length,
-                                  (index) => Draggable(
+                                  (cardIndex) => Draggable(
                                       onDragEnd: viewmodel.onCardDrag,
-                                      feedback: GestureDetector(
-                                        onTapDown: (TapDownDetails details) {
-                                          final double x =
-                                              details.localPosition.dx;
-                                          final double y =
-                                              details.localPosition.dy;
-
-                                          if (x < 50 && y < 50) {
-                                            if (viewmodel.cardIndex > 0) {
-                                              viewmodel.removeCard(
-                                                  viewmodel.cardIndex);
-                                            }
-                                          } else if (x > 250 && y < 50) {
-                                            if (viewmodel.cardIndex <
-                                                viewmodel.cardDatas.length -
-                                                    1) {
-                                              viewmodel.removeCard(
-                                                  viewmodel.cardIndex);
-                                            }
-                                          }
-                                        },
-                                        child: Container(
-                                          width: 340,
-                                          height: 600,
-                                          margin: const EdgeInsets.symmetric(
-                                            horizontal: 10,
-                                          ),
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                20,
-                                              ),
-                                              border: Border.all(
-                                                color: Color(0xff3A3A3A),
-                                              )),
-                                          child: Stack(
-                                            children: [
-                                              GestureDetector(
-                                                onTap: () {
-                                                  viewmodel.currentImageIndex =
-                                                      1 +
-                                                          viewmodel
-                                                              .currentImageIndex;
-                                                  viewmodel.notifyListeners();
-                                                },
-                                                child: Container(
+                                      feedback: Material(
+                                        elevation: 0,
+                                        color: Colors.transparent,
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(12),
+                                          child: Container(
+                                            width: 340,
+                                            height: 600,
+                                            margin: const EdgeInsets.symmetric(
+                                              horizontal: 10,
+                                            ),
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                  20,
+                                                ),
+                                                border: Border.all(
+                                                  color: const Color(0xff3A3A3A),
+                                                )),
+                                            child: Stack(
+                                              children: [
+                                                Container(
                                                   width: 340,
                                                   height: 600,
                                                   decoration: BoxDecoration(
@@ -207,17 +185,37 @@ class _HomePageState extends State<HomePage> {
                                                   )),
                                                   child: CachedNetworkImage(
                                                     imageUrl: viewmodel
-                                                        .cardDatas[index]
-                                                        .images[0],
+                                                            .cardDatas[cardIndex]
+                                                            .images[
+                                                        viewmodel
+                                                            .currentImageIndex],
                                                     width: 340,
                                                     height: 600,
-                                                    fit: BoxFit.fill,
-                                                    placeholder:
-                                                        (context, url) =>
-                                                            Shimmer.fromColors(
+                                                    fit: BoxFit.cover,
+                                                    imageBuilder:
+                                                        (context, imageprovier) {
+                                                      return Container(
+                                                        decoration:
+                                                            ShapeDecoration(
+                                                          image: DecorationImage(
+                                                              fit: BoxFit.cover,
+                                                              image:
+                                                                  imageprovier),
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                              20,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    placeholder: (context, url) =>
+                                                        Shimmer.fromColors(
                                                       baseColor: Colors.grey,
-                                                      highlightColor:
-                                                          Colors.red,
+                                                      highlightColor: Colors.red,
                                                       child: Container(
                                                         width: 340,
                                                         height: 600,
@@ -241,84 +239,100 @@ class _HomePageState extends State<HomePage> {
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                              Positioned(
-                                                top: 16,
-                                                left: 20,
-                                                child: Container(
-                                                  width: 300,
-                                                  alignment:
-                                                      Alignment.topCenter,
-                                                  child:
-                                                      AnimatedSmoothIndicator(
-                                                    activeIndex: viewmodel
-                                                        .currentImageIndex,
-                                                    count: viewmodel
-                                                        .cardDatas[index]
-                                                        .images
-                                                        .length,
-                                                    curve: Curves.easeOutSine,
-                                                    effect:
-                                                        const CustomizableEffect(
-                                                      spacing: 4,
-                                                      dotDecoration:
-                                                          DotDecoration(
-                                                        height: 3,
-                                                        width: 56.8,
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius.circular(
-                                                                    1000)),
-                                                        color: Color(
-                                                          0xff202020,
-                                                        ),
-                                                      ),
-                                                      activeDotDecoration:
-                                                          DotDecoration(
-                                                        height: 3,
-                                                        width: 56.8,
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                          Radius.circular(
-                                                            1000,
+                                                Positioned(
+                                                  top: 16,
+                                                  left: 20,
+                                                  child: Container(
+                                                    width: 300,
+                                                    alignment:
+                                                        Alignment.topCenter,
+                                                    child:
+                                                        AnimatedSmoothIndicator(
+                                                      activeIndex: viewmodel
+                                                          .currentImageIndex,
+                                                      count: viewmodel
+                                                          .cardDatas[cardIndex]
+                                                          .images
+                                                          .length,
+                                                      curve: Curves.easeOutSine,
+                                                      effect:
+                                                          const CustomizableEffect(
+                                                        spacing: 4,
+                                                        dotDecoration:
+                                                            DotDecoration(
+                                                          height: 3,
+                                                          width: 56.8,
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius.circular(
+                                                                      1000)),
+                                                          color: Color(
+                                                            0xff202020,
                                                           ),
                                                         ),
-                                                        color: Color(
-                                                          0xffFF006B,
+                                                        activeDotDecoration:
+                                                            DotDecoration(
+                                                          height: 3,
+                                                          width: 56.8,
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                            Radius.circular(
+                                                              1000,
+                                                            ),
+                                                          ),
+                                                          color: Color(
+                                                            0xffFF006B,
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                              Positioned(
-                                                bottom: 0,
-                                                child: Visibility(
-                                                  visible: viewmodel
-                                                          .currentImageIndex ==
-                                                      0,
-                                                  child: MainProfileBodyOne(),
+                                                Positioned(
+                                                  bottom: 0,
+                                                  child: Visibility(
+                                                    visible: viewmodel
+                                                            .currentImageIndex ==
+                                                        0,
+                                                    child: MainProfileBodyOne(
+                                                      cardData: viewmodel
+                                                          .cardDatas[cardIndex],
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
-                                              Positioned(
-                                                bottom: 0,
-                                                child: Visibility(
-                                                  visible: viewmodel
-                                                          .currentImageIndex ==
-                                                      1,
-                                                  child: MainProfileBodyTwo(),
+                                                Positioned(
+                                                  bottom: 0,
+                                                  child: Visibility(
+                                                    visible: viewmodel
+                                                            .currentImageIndex ==
+                                                        1,
+                                                    child: MainProfileBodyTwo(
+                                                      cardData: viewmodel
+                                                          .cardDatas[cardIndex],
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
-                                              Positioned(
-                                                bottom: 0,
-                                                child: Visibility(
-                                                  visible: viewmodel
-                                                          .currentImageIndex ==
-                                                      2,
-                                                  child: MainProfileBodyThree(),
+                                                Positioned(
+                                                  bottom: 0,
+                                                  child: Visibility(
+                                                    visible: viewmodel
+                                                                .currentImageIndex <=
+                                                            2 &&
+                                                        viewmodel
+                                                                .currentImageIndex <
+                                                            viewmodel
+                                                                .cardDatas[
+                                                                    cardIndex]
+                                                                .images
+                                                                .length,
+                                                    child: MainProfileBodyThree(
+                                                      cardData: viewmodel
+                                                          .cardDatas[cardIndex],
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -329,7 +343,6 @@ class _HomePageState extends State<HomePage> {
                                           final double y =
                                               details.localPosition.dy;
 
-                                          // Check if tapped on the left-top corner
                                           if (x < 50 && y < 50) {
                                             if (viewmodel.cardIndex > 0) {
                                               viewmodel.removeCard(
@@ -337,41 +350,50 @@ class _HomePageState extends State<HomePage> {
                                               viewmodel.notifyListeners();
                                             }
                                           }
-                                          // Check if tapped on the right-top corner
-                                          // else if (x > 250 && y < 50) {
-                                          //   if (viewmodel.cardIndex <
-                                          //       viewmodel.cardDatas.length -
-                                          //           1) {
-                                          //     viewmodel.showCard(
-                                          //         viewmodel.cardIndex + 1);
-                                          //   }
-                                          // }
                                         },
-                                        child: Container(
-                                          width: 340,
-                                          height: 600,
-                                          margin: const EdgeInsets.symmetric(
-                                            horizontal: 10,
-                                          ),
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                20,
-                                              ),
-                                              border: Border.all(
-                                                color: Color(0xff3A3A3A),
-                                              )),
-                                          child: Stack(
-                                            children: [
-                                              GestureDetector(
-                                                onTap: () {
-                                                  viewmodel.currentImageIndex =
-                                                      1 +
-                                                          viewmodel
-                                                              .currentImageIndex;
-                                                  viewmodel.notifyListeners();
-                                                },
-                                                child: Container(
+                                        onTapUp: (details) {
+                                          final RenderBox box = context
+                                              .findRenderObject() as RenderBox;
+                                          final Offset localPosition =
+                                              box.globalToLocal(
+                                                  details.globalPosition);
+
+                                          if (localPosition.dy < 20 &&
+                                              localPosition.dx < 100) {
+                                            // previos
+                                            viewmodel.onImageIndexChange(
+                                              cardIndex,
+                                              viewmodel.currentImageIndex - 1,
+                                            );
+                                          } else if (localPosition.dy < 20 &&
+                                              localPosition.dx > 300) {
+                                            viewmodel.onImageIndexChange(
+                                              cardIndex,
+                                              viewmodel.currentImageIndex + 1,
+                                            );
+                                          }
+                                        },
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          child: Container(
+                                            width: 340,
+                                            height: 600,
+                                            margin: const EdgeInsets.symmetric(
+                                              horizontal: 10,
+                                            ),
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                  20,
+                                                ),
+                                                border: Border.all(
+                                                  color:
+                                                      const Color(0xff3A3A3A),
+                                                )),
+                                            child: Stack(
+                                              children: [
+                                                Container(
                                                   width: 340,
                                                   height: 600,
                                                   decoration: BoxDecoration(
@@ -381,11 +403,34 @@ class _HomePageState extends State<HomePage> {
                                                   )),
                                                   child: CachedNetworkImage(
                                                     imageUrl: viewmodel
-                                                        .cardDatas[index]
-                                                        .images[0],
+                                                            .cardDatas[cardIndex]
+                                                            .images[
+                                                        viewmodel
+                                                            .currentImageIndex],
                                                     width: 340,
                                                     height: 600,
-                                                    fit: BoxFit.fill,
+                                                  
+                                                     fit: BoxFit.cover,
+                                                  imageBuilder:
+                                                      (context, imageprovier) {
+                                                    return Container(
+                                                      decoration:
+                                                          ShapeDecoration(
+                                                        image: DecorationImage(
+                                                            fit: BoxFit.cover,
+                                                            image:
+                                                                imageprovier),
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                            20,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
                                                     placeholder:
                                                         (context, url) =>
                                                             Shimmer.fromColors(
@@ -415,91 +460,119 @@ class _HomePageState extends State<HomePage> {
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                              Positioned(
-                                                top: 16,
-                                                left: 20,
-                                                child: Container(
-                                                  width: 300,
-                                                  alignment:
-                                                      Alignment.topCenter,
-                                                  child:
-                                                      AnimatedSmoothIndicator(
-                                                    activeIndex: viewmodel
-                                                        .currentImageIndex,
-                                                    count: viewmodel
-                                                        .cardDatas[index]
-                                                        .images
-                                                        .length,
-                                                    curve: Curves.easeOutSine,
-                                                    effect:
-                                                        const CustomizableEffect(
-                                                      spacing: 4,
-                                                      dotDecoration:
-                                                          DotDecoration(
-                                                        height: 3,
-                                                        width: 56.8,
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius.circular(
-                                                                    1000)),
-                                                        color: Color(
-                                                          0xff202020,
-                                                        ),
-                                                      ),
-                                                      activeDotDecoration:
-                                                          DotDecoration(
-                                                        height: 3,
-                                                        width: 56.8,
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                          Radius.circular(
-                                                            1000,
+                                                Positioned(
+                                                  top: 16,
+                                                  left: 20,
+                                                  child: Container(
+                                                    width: 300,
+                                                    alignment:
+                                                        Alignment.topCenter,
+                                                    child:
+                                                        AnimatedSmoothIndicator(
+                                                      activeIndex: viewmodel
+                                                          .currentImageIndex,
+                                                      count: viewmodel
+                                                          .cardDatas[cardIndex]
+                                                          .images
+                                                          .length,
+                                                      curve: Curves.easeOutSine,
+                                                      onDotClicked: (int val) {
+                                                        viewmodel
+                                                            .onImageIndexChange(
+                                                          cardIndex,
+                                                          val,
+                                                        );
+                                                      },
+                                                      effect:
+                                                          const CustomizableEffect(
+                                                        spacing: 4,
+                                                        dotDecoration:
+                                                            DotDecoration(
+                                                          height: 3,
+                                                          width: 56.8,
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          1000)),
+                                                          color: Color(
+                                                            0xff202020,
                                                           ),
                                                         ),
-                                                        color: Color(
-                                                          0xffFF006B,
+                                                        activeDotDecoration:
+                                                            DotDecoration(
+                                                          height: 3,
+                                                          width: 56.8,
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                            Radius.circular(
+                                                              1000,
+                                                            ),
+                                                          ),
+                                                          color: Color(
+                                                            0xffFF006B,
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                              Positioned(
-                                                bottom: 0,
-                                                child: Visibility(
-                                                  visible: viewmodel
-                                                          .currentImageIndex ==
-                                                      0,
-                                                  child: MainProfileBodyOne(),
+                                                Positioned(
+                                                  bottom: 0,
+                                                  child: Visibility(
+                                                    visible: viewmodel
+                                                            .currentImageIndex ==
+                                                        0,
+                                                    child: MainProfileBodyOne(
+                                                      cardData: viewmodel
+                                                          .cardDatas[cardIndex],
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
-                                              Positioned(
-                                                bottom: 0,
-                                                child: Visibility(
-                                                  visible: viewmodel
-                                                          .currentImageIndex ==
-                                                      1,
-                                                  child: MainProfileBodyTwo(),
+                                                Positioned(
+                                                  bottom: 0,
+                                                  child: Visibility(
+                                                    visible: viewmodel
+                                                            .currentImageIndex ==
+                                                        1,
+                                                    child: MainProfileBodyTwo(
+                                                      cardData: viewmodel
+                                                          .cardDatas[cardIndex],
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
-                                              Positioned(
-                                                bottom: 0,
-                                                child: Visibility(
-                                                  visible: viewmodel
-                                                          .currentImageIndex ==
-                                                      2,
-                                                  child: MainProfileBodyThree(),
+                                                Positioned(
+                                                  bottom: 0,
+                                                  child: Visibility(
+                                                    visible: viewmodel
+                                                                .currentImageIndex >=
+                                                            2 &&
+                                                        viewmodel
+                                                                .currentImageIndex <=
+                                                            viewmodel
+                                                                .cardDatas[
+                                                                    cardIndex]
+                                                                .images[viewmodel
+                                                                    .currentImageIndex]
+                                                                .length,
+                                                    child: MainProfileBodyThree(
+                                                      cardData: viewmodel
+                                                          .cardDatas[cardIndex],
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       )),
                                 ),
                               );
                             } else {
-                              return Text("No Data");
+                              return const Center(
+                                  child: const Text(
+                                "No Data",
+                              ));
                             }
                           }
                         }),
@@ -513,7 +586,9 @@ class _HomePageState extends State<HomePage> {
 }
 
 class MainProfileBodyOne extends StatelessWidget {
-  const MainProfileBodyOne({Key? key}) : super(key: key);
+  final CardData cardData;
+  const MainProfileBodyOne({Key? key, required this.cardData})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -521,7 +596,7 @@ class MainProfileBodyOne extends StatelessWidget {
       children: [
         Container(
           width: 292,
-          margin: EdgeInsets.symmetric(horizontal: 25),
+          margin: const EdgeInsets.symmetric(horizontal: 25),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -532,10 +607,11 @@ class MainProfileBodyOne extends StatelessWidget {
                     height: 30,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(100),
-                        color: Color(0xff000000),
-                        border: Border.all(width: 1, color: Color(0xff212121))),
-                    padding:
-                        EdgeInsets.only(top: 5, right: 10, bottom: 5, left: 6),
+                        color: const Color(0xff000000),
+                        border: Border.all(
+                            width: 1, color: const Color(0xff212121))),
+                    padding: const EdgeInsets.only(
+                        top: 5, right: 10, bottom: 5, left: 6),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -554,9 +630,9 @@ class MainProfileBodyOne extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const Text(
-                          "29,930",
-                          style: TextStyle(
+                        Text(
+                          "${cardData.likeCount}",
+                          style: const TextStyle(
                             fontFamily: 'Pretendard',
                             fontSize: 14.0,
                             height: 16.7 / 14,
@@ -570,19 +646,19 @@ class MainProfileBodyOne extends StatelessWidget {
                   ),
                   RichText(
                     text: TextSpan(
-                      text: '잭과분홍콩나물 ',
-                      style: TextStyle(
+                      text: cardData.name,
+                      style: const TextStyle(
                         color: Color(0xffFCFCFC),
                         fontFamily: "Pretendard",
                         fontSize: 28,
                         height: 33.6 / 28,
                         fontWeight: FontWeight.w700,
                       ),
-                      children: const <TextSpan>[
+                      children: <TextSpan>[
                         TextSpan(
-                            text: '25',
-                            style: TextStyle(
-                              color: Color(0xffFCFCFC),
+                            text: " ${cardData.age}",
+                            style: const TextStyle(
+                              color: const Color(0xffFCFCFC),
                               fontFamily: "Pretendard",
                               fontSize: 24,
                               height: 28.8 / 24,
@@ -591,29 +667,19 @@ class MainProfileBodyOne extends StatelessWidget {
                       ],
                     ),
                   ),
-                  RichText(
-                    text: TextSpan(
-                      text: '서 ',
-                      style: TextStyle(
-                        color: Color(0xffFCFCFC),
-                        fontFamily: "Pretendard",
-                        fontSize: 15,
-                        height: 22.5 / 15,
-                        fontWeight: FontWeight.w300,
-                      ),
-                      children: const <TextSpan>[
-                        TextSpan(
-                          text: ' . ',
-                        ),
-                        TextSpan(
-                          text: '2km 거리에 있음',
-                        ),
-                      ],
+                  Text(
+                    '${cardData.location}',
+                    style: const TextStyle(
+                      color: Color(0xffFCFCFC),
+                      fontFamily: "Pretendard",
+                      fontSize: 15,
+                      height: 22.5 / 15,
+                      fontWeight: FontWeight.w300,
                     ),
                   ),
                 ],
               ),
-              SizedBox(),
+              const SizedBox(),
               Image.asset(
                 AppImages.heart,
                 width: 48,
@@ -629,7 +695,7 @@ class MainProfileBodyOne extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.black.withOpacity(0.05),
           ),
-          child: Icon(
+          child: const Icon(
             Icons.keyboard_arrow_down,
             color: Colors.white,
           ),
@@ -640,7 +706,9 @@ class MainProfileBodyOne extends StatelessWidget {
 }
 
 class MainProfileBodyTwo extends StatelessWidget {
-  const MainProfileBodyTwo({Key? key}) : super(key: key);
+  const MainProfileBodyTwo({Key? key, required this.cardData})
+      : super(key: key);
+  final CardData cardData;
 
   @override
   Widget build(BuildContext context) {
@@ -648,24 +716,24 @@ class MainProfileBodyTwo extends StatelessWidget {
       children: [
         Container(
           width: 292,
-          margin: EdgeInsets.symmetric(horizontal: 25),
+          margin: const EdgeInsets.symmetric(horizontal: 25),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Container(
                 width: 226,
-                child: Wrap(
-                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
                       height: 30,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(100),
-                          color: Color(0xff000000),
-                          border:
-                              Border.all(width: 1, color: Color(0xff212121))),
-                      padding: EdgeInsets.only(
+                          color: const Color(0xff000000),
+                          border: Border.all(
+                              width: 1, color: const Color(0xff212121))),
+                      padding: const EdgeInsets.only(
                           top: 5, right: 10, bottom: 5, left: 6),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -685,14 +753,14 @@ class MainProfileBodyTwo extends StatelessWidget {
                               ),
                             ),
                           ),
-                          const Text(
-                            "29,930",
-                            style: TextStyle(
+                          Text(
+                            "${cardData.likeCount}",
+                            style: const TextStyle(
                               fontFamily: 'Pretendard',
                               fontSize: 14.0,
                               height: 16.7 / 14,
                               fontWeight: FontWeight.w500,
-                              color: Color(0xffFCFCFC),
+                              color: const Color(0xffFCFCFC),
                               letterSpacing: -0.6,
                             ),
                           )
@@ -701,19 +769,19 @@ class MainProfileBodyTwo extends StatelessWidget {
                     ),
                     RichText(
                       text: TextSpan(
-                        text: '잭과분홍콩나물 ',
-                        style: TextStyle(
+                        text: '${cardData.name}',
+                        style: const TextStyle(
                           color: Color(0xffFCFCFC),
                           fontFamily: "Pretendard",
                           fontSize: 28,
                           height: 33.6 / 28,
                           fontWeight: FontWeight.w700,
                         ),
-                        children: const <TextSpan>[
+                        children: <TextSpan>[
                           TextSpan(
-                              text: '25',
-                              style: TextStyle(
-                                color: Color(0xffFCFCFC),
+                              text: '${cardData.age}',
+                              style: const TextStyle(
+                                color: const Color(0xffFCFCFC),
                                 fontFamily: "Pretendard",
                                 fontSize: 24,
                                 height: 28.8 / 24,
@@ -725,10 +793,10 @@ class MainProfileBodyTwo extends StatelessWidget {
                     Wrap(
                       children: [
                         Text(
-                          '서로 아껴주고 힘이 되어줄 사람 찾아요 선릉으로 직장 다니고 있고 여행 좋아해요 이상한 이야기하시는 분 바로 차단입니다',
+                          cardData.description!,
                           overflow: TextOverflow.fade,
-                          style: TextStyle(
-                            color: Color(0xffFCFCFC),
+                          style: const TextStyle(
+                            color: const Color(0xffFCFCFC),
                             fontFamily: "Pretendard",
                             fontSize: 15,
                             height: 22.5 / 15,
@@ -740,7 +808,7 @@ class MainProfileBodyTwo extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(),
+              const SizedBox(),
               Image.asset(
                 AppImages.heart,
                 width: 48,
@@ -756,7 +824,7 @@ class MainProfileBodyTwo extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.black.withOpacity(0.05),
           ),
-          child: Icon(
+          child: const Icon(
             Icons.keyboard_arrow_down,
             color: Colors.white,
           ),
@@ -767,7 +835,11 @@ class MainProfileBodyTwo extends StatelessWidget {
 }
 
 class MainProfileBodyThree extends StatelessWidget {
-  const MainProfileBodyThree({Key? key}) : super(key: key);
+  final CardData cardData;
+  const MainProfileBodyThree({
+    Key? key,
+    required this.cardData,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -775,24 +847,24 @@ class MainProfileBodyThree extends StatelessWidget {
       children: [
         Container(
           width: 292,
-          margin: EdgeInsets.symmetric(horizontal: 25),
+          margin: const EdgeInsets.symmetric(horizontal: 25),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Container(
                 width: 226,
-                child: Wrap(
-                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
                       height: 30,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(100),
-                          color: Color(0xff000000),
-                          border:
-                              Border.all(width: 1, color: Color(0xff212121))),
-                      padding: EdgeInsets.only(
+                          color: const Color(0xff000000),
+                          border: Border.all(
+                              width: 1, color: const Color(0xff212121))),
+                      padding: const EdgeInsets.only(
                           top: 5, right: 10, bottom: 5, left: 6),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -812,9 +884,9 @@ class MainProfileBodyThree extends StatelessWidget {
                               ),
                             ),
                           ),
-                          const Text(
-                            "29,930",
-                            style: TextStyle(
+                          Text(
+                            "${cardData.likeCount}",
+                            style: const TextStyle(
                               fontFamily: 'Pretendard',
                               fontSize: 14.0,
                               height: 16.7 / 14,
@@ -828,7 +900,7 @@ class MainProfileBodyThree extends StatelessWidget {
                     ),
                     RichText(
                       text: TextSpan(
-                        text: '잭과분홍콩나물 ',
+                        text: '${cardData.name}',
                         style: TextStyle(
                           color: Color(0xffFCFCFC),
                           fontFamily: "Pretendard",
@@ -836,9 +908,9 @@ class MainProfileBodyThree extends StatelessWidget {
                           height: 33.6 / 28,
                           fontWeight: FontWeight.w700,
                         ),
-                        children: const <TextSpan>[
+                        children: <TextSpan>[
                           TextSpan(
-                              text: '25',
+                              text: '${cardData.age}',
                               style: TextStyle(
                                 color: Color(0xffFCFCFC),
                                 fontFamily: "Pretendard",
@@ -849,17 +921,17 @@ class MainProfileBodyThree extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 4,
                     ),
                     Container(
                       height: 41,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(100),
-                          color: Color(0xff621133).withOpacity(0.7),
-                          border:
-                              Border.all(width: 1, color: Color(0xffFF016B))),
-                      padding: EdgeInsets.symmetric(
+                          color: const Color(0xff621133).withOpacity(0.7),
+                          border: Border.all(
+                              width: 1, color: const Color(0xffFF016B))),
+                      padding: const EdgeInsets.symmetric(
                         vertical: 10,
                         horizontal: 12,
                       ),
@@ -881,8 +953,8 @@ class MainProfileBodyThree extends StatelessWidget {
                               ),
                             ),
                           ),
-                          const Text(
-                            "진지한 연애를 찾는 중",
+                          Text(
+                            "${cardData.description}",
                             style: TextStyle(
                               fontFamily: 'Pretendard',
                               fontSize: 14.0,
@@ -897,36 +969,26 @@ class MainProfileBodyThree extends StatelessWidget {
                     ),
                     Wrap(
                       children: List.generate(
-                        4,
-                        (index) => Container(
+                        cardData.tags.length,
+                        (tagIndex) => Container(
                           height: 30,
+                          margin:
+                              EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(100),
-                              color: Color(0xff000000),
+                              color: const Color(0xff000000),
                               border: Border.all(
-                                  width: 1, color: Color(0xff212121))),
-                          padding: EdgeInsets.only(
-                              top: 5, right: 10, bottom: 5, left: 6),
+                                  width: 1, color: const Color(0xff212121))),
+                          padding: const EdgeInsets.only(
+                              top: 5, right: 7, bottom: 5, left: 7.5),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: Align(
-                                  alignment: Alignment.center,
-                                  child: Image.asset(
-                                    AppImages.greyStar,
-                                    width: 14,
-                                    height: 14,
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
-                              ),
-                              const Text(
-                                "29,4034",
+                              Text(
+                                cardData.tags[tagIndex],
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontFamily: 'Pretendard',
                                   fontSize: 14.0,
@@ -944,7 +1006,7 @@ class MainProfileBodyThree extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(),
+              const SizedBox(),
               Image.asset(
                 AppImages.heart,
                 width: 48,
@@ -960,7 +1022,7 @@ class MainProfileBodyThree extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.black.withOpacity(0.05),
           ),
-          child: Icon(
+          child: const Icon(
             Icons.keyboard_arrow_down,
             color: Colors.white,
           ),

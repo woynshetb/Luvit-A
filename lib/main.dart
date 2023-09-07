@@ -10,7 +10,7 @@ bool shouldUseFirestoreEmulator = true;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-   if (shouldUseFirestoreEmulator) {
+  if (shouldUseFirestoreEmulator) {
     FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
   }
   runApp(const MyApp());
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const BasePage(),
-        '/home': (context) => const HomePage(),
+        '/home': (context) => HomePage(),
       },
     );
   }

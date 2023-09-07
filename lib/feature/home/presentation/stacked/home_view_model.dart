@@ -45,8 +45,19 @@ class HomeViewModel extends BaseViewModel {
 
   void removeCard(int index) {
     if (index >= 0 && index < cardDatas.length) {
-      cardDatas.removeAt(index);
+      cardDatas.removeAt(0);
     }
+
+    notifyListeners();
+  }
+
+  onImageIndexChange(int cardIndex, int newImageIndex) {
+
+    if (newImageIndex > -1 &&
+        newImageIndex <= cardDatas[cardIndex].images.length - 1) {
+      currentImageIndex = newImageIndex;
+    }
+
     notifyListeners();
   }
 }
