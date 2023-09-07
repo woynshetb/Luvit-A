@@ -31,7 +31,7 @@ class HomeViewModel extends BaseViewModel {
         jsonVal[key] = value;
       });
 
-      cardDatas.add(CardData.fromJson(jsonVal));
+     cardDatas.add(CardData.fromJson(jsonVal));
     }
   }
 

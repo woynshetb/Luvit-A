@@ -7,6 +7,7 @@ import 'package:luvit/feature/home/presentation/stacked/home_view_model.dart';
 import 'package:luvit/feature/home/presentation/view/widgets/card_one.dart';
 import 'package:luvit/feature/home/presentation/view/widgets/card_three.dart';
 import 'package:luvit/feature/home/presentation/view/widgets/card_two.dart';
+import 'package:luvit/feature/home/presentation/view/widgets/empty_card.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:stacked/stacked.dart';
@@ -146,436 +147,483 @@ class _HomePageState extends State<HomePage> {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             return const Center(
-                                child: CircularProgressIndicator());
+                                child: CircularProgressIndicator(
+                                  color: Color(0xffFF016B),
+                                ));
                           } else {
                             if (snapshot.hasData) {
                               viewmodel.onParseData(snapshot.data!);
 
-                              return ListView(
-                                scrollDirection: Axis.horizontal,
-                                children: List.generate(
-                                  viewmodel.cardDatas.length,
-                                  (cardIndex) => Draggable(
-                                      onDragEnd: viewmodel.onCardDrag,
-                                      feedback: Material(
-                                        elevation: 0,
-                                        color: Colors.transparent,
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(12),
-                                          child: Container(
-                                            width: 340,
-                                            height: 600,
-                                            margin: const EdgeInsets.symmetric(
-                                              horizontal: 10,
-                                            ),
-                                            decoration: BoxDecoration(
+                              return viewmodel.cardDatas.isEmpty
+                                  ? EmptyCard()
+                                  : ListView(
+                                      scrollDirection: Axis.horizontal,
+                                      children: List.generate(
+                                        viewmodel.cardDatas.length,
+                                        (cardIndex) => Draggable(
+                                            onDragEnd: viewmodel.onCardDrag,
+                                            feedback: Material(
+                                              elevation: 0,
+                                              color: Colors.transparent,
+                                              child: ClipRRect(
                                                 borderRadius:
-                                                    BorderRadius.circular(
-                                                  20,
-                                                ),
-                                                border: Border.all(
-                                                  color: const Color(0xff3A3A3A),
-                                                )),
-                                            child: Stack(
-                                              children: [
-                                                Container(
+                                                    BorderRadius.circular(12),
+                                                child: Container(
                                                   width: 340,
                                                   height: 600,
+                                                  margin: const EdgeInsets
+                                                      .symmetric(
+                                                    horizontal: 10,
+                                                  ),
                                                   decoration: BoxDecoration(
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                    20,
-                                                  )),
-                                                  child: CachedNetworkImage(
-                                                    imageUrl: viewmodel
-                                                            .cardDatas[cardIndex]
-                                                            .images[
-                                                        viewmodel
-                                                            .currentImageIndex],
-                                                    width: 340,
-                                                    height: 600,
-                                                    fit: BoxFit.cover,
-                                                    imageBuilder:
-                                                        (context, imageprovier) {
-                                                      return Container(
-                                                        decoration:
-                                                            ShapeDecoration(
-                                                          image: DecorationImage(
-                                                              fit: BoxFit.cover,
-                                                              image:
-                                                                  imageprovier),
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                              20,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
-                                                    placeholder: (context, url) =>
-                                                        Shimmer.fromColors(
-                                                      baseColor: Colors.grey,
-                                                      highlightColor: Colors.red,
-                                                      child: Container(
+                                                        20,
+                                                      ),
+                                                      border: Border.all(
+                                                        color: const Color(
+                                                            0xff3A3A3A),
+                                                      )),
+                                                  child: Stack(
+                                                    children: [
+                                                      Container(
                                                         width: 340,
                                                         height: 600,
                                                         decoration:
-                                                            ShapeDecoration(
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                              20,
+                                                            BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                          20,
+                                                        )),
+                                                        child:
+                                                            CachedNetworkImage(
+                                                          imageUrl: viewmodel
+                                                                  .cardDatas[
+                                                                      cardIndex]
+                                                                  .images[
+                                                              viewmodel
+                                                                  .currentImageIndex],
+                                                          width: 340,
+                                                          height: 600,
+                                                          fit: BoxFit.cover,
+                                                          imageBuilder: (context,
+                                                              imageprovier) {
+                                                            return Container(
+                                                              decoration:
+                                                                  ShapeDecoration(
+                                                                image: DecorationImage(
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                    image:
+                                                                        imageprovier),
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                    20,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                          placeholder: (context,
+                                                                  url) =>
+                                                              Shimmer
+                                                                  .fromColors(
+                                                            baseColor:
+                                                                Colors.grey,
+                                                            highlightColor:
+                                                                Colors.red,
+                                                            child: Container(
+                                                              width: 340,
+                                                              height: 600,
+                                                              decoration:
+                                                                  ShapeDecoration(
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                    20,
+                                                                  ),
+                                                                ),
+                                                              ),
                                                             ),
+                                                          ),
+                                                          errorWidget: (context,
+                                                                  url, error) =>
+                                                              const Icon(
+                                                            Icons.error,
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
-                                                    errorWidget:
-                                                        (context, url, error) =>
-                                                            const Icon(
-                                                      Icons.error,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Positioned(
-                                                  top: 16,
-                                                  left: 20,
-                                                  child: Container(
-                                                    width: 300,
-                                                    alignment:
-                                                        Alignment.topCenter,
-                                                    child:
-                                                        AnimatedSmoothIndicator(
-                                                      activeIndex: viewmodel
-                                                          .currentImageIndex,
-                                                      count: viewmodel
-                                                          .cardDatas[cardIndex]
-                                                          .images
-                                                          .length,
-                                                      curve: Curves.easeOutSine,
-                                                      effect:
-                                                          const CustomizableEffect(
-                                                        spacing: 4,
-                                                        dotDecoration:
-                                                            DotDecoration(
-                                                          height: 3,
-                                                          width: 56.8,
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius.circular(
-                                                                      1000)),
-                                                          color: Color(
-                                                            0xff202020,
-                                                          ),
-                                                        ),
-                                                        activeDotDecoration:
-                                                            DotDecoration(
-                                                          height: 3,
-                                                          width: 56.8,
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                            Radius.circular(
-                                                              1000,
-                                                            ),
-                                                          ),
-                                                          color: Color(
-                                                            0xffFF006B,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Positioned(
-                                                  bottom: 0,
-                                                  child: Visibility(
-                                                    visible: viewmodel
-                                                            .currentImageIndex ==
-                                                        0,
-                                                    child: MainProfileBodyOne(
-                                                      cardData: viewmodel
-                                                          .cardDatas[cardIndex],
-                                                    ),
-                                                  ),
-                                                ),
-                                                Positioned(
-                                                  bottom: 0,
-                                                  child: Visibility(
-                                                    visible: viewmodel
-                                                            .currentImageIndex ==
-                                                        1,
-                                                    child: MainProfileBodyTwo(
-                                                      cardData: viewmodel
-                                                          .cardDatas[cardIndex],
-                                                    ),
-                                                  ),
-                                                ),
-                                                Positioned(
-                                                  bottom: 0,
-                                                  child: Visibility(
-                                                    visible: viewmodel
-                                                                .currentImageIndex <=
-                                                            2 &&
-                                                        viewmodel
-                                                                .currentImageIndex <
-                                                            viewmodel
+                                                      Positioned(
+                                                        top: 16,
+                                                        left: 20,
+                                                        child: Container(
+                                                          width: 300,
+                                                          alignment: Alignment
+                                                              .topCenter,
+                                                          child:
+                                                              AnimatedSmoothIndicator(
+                                                            activeIndex: viewmodel
+                                                                .currentImageIndex,
+                                                            count: viewmodel
                                                                 .cardDatas[
                                                                     cardIndex]
                                                                 .images
                                                                 .length,
-                                                    child: MainProfileBodyThree(
-                                                      cardData: viewmodel
-                                                          .cardDatas[cardIndex],
-                                                    ),
+                                                            curve: Curves
+                                                                .easeOutSine,
+                                                            effect:
+                                                                const CustomizableEffect(
+                                                              spacing: 4,
+                                                              dotDecoration:
+                                                                  DotDecoration(
+                                                                height: 3,
+                                                                width: 56.8,
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            1000)),
+                                                                color: Color(
+                                                                  0xff202020,
+                                                                ),
+                                                              ),
+                                                              activeDotDecoration:
+                                                                  DotDecoration(
+                                                                height: 3,
+                                                                width: 56.8,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .all(
+                                                                  Radius
+                                                                      .circular(
+                                                                    1000,
+                                                                  ),
+                                                                ),
+                                                                color: Color(
+                                                                  0xffFF006B,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Positioned(
+                                                        bottom: 0,
+                                                        child: Visibility(
+                                                          visible: viewmodel
+                                                                  .currentImageIndex ==
+                                                              0,
+                                                          child:
+                                                              MainProfileBodyOne(
+                                                            cardData: viewmodel
+                                                                    .cardDatas[
+                                                                cardIndex],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Positioned(
+                                                        bottom: 0,
+                                                        child: Visibility(
+                                                          visible: viewmodel
+                                                                  .currentImageIndex ==
+                                                              1,
+                                                          child:
+                                                              MainProfileBodyTwo(
+                                                            cardData: viewmodel
+                                                                    .cardDatas[
+                                                                cardIndex],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Positioned(
+                                                        bottom: 0,
+                                                        child: Visibility(
+                                                          visible: viewmodel
+                                                                      .currentImageIndex <=
+                                                                  2 &&
+                                                              viewmodel
+                                                                      .currentImageIndex <
+                                                                  viewmodel
+                                                                      .cardDatas[
+                                                                          cardIndex]
+                                                                      .images
+                                                                      .length,
+                                                          child:
+                                                              MainProfileBodyThree(
+                                                            cardData: viewmodel
+                                                                    .cardDatas[
+                                                                cardIndex],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
-                                              ],
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                      ),
-                                      child: GestureDetector(
-                                        onTapDown: (TapDownDetails details) {
-                                          final double x =
-                                              details.localPosition.dx;
-                                          final double y =
-                                              details.localPosition.dy;
+                                            child: GestureDetector(
+                                              onTapDown:
+                                                  (TapDownDetails details) {
+                                                final double x =
+                                                    details.localPosition.dx;
+                                                final double y =
+                                                    details.localPosition.dy;
 
-                                          if (x < 50 && y < 50) {
-                                            if (viewmodel.cardIndex > 0) {
-                                              viewmodel.removeCard(
-                                                  viewmodel.cardIndex);
-                                              viewmodel.notifyListeners();
-                                            }
-                                          }
-                                        },
-                                        onTapUp: (details) {
-                                          final RenderBox box = context
-                                              .findRenderObject() as RenderBox;
-                                          final Offset localPosition =
-                                              box.globalToLocal(
-                                                  details.globalPosition);
+                                                if (x < 50 && y < 50) {
+                                                  if (viewmodel.cardIndex > 0) {
+                                                    viewmodel.removeCard(
+                                                        viewmodel.cardIndex);
+                                                    viewmodel.notifyListeners();
+                                                  }
+                                                }
+                                              },
+                                              onTapUp: (details) {
+                                                final RenderBox box =
+                                                    context.findRenderObject()
+                                                        as RenderBox;
+                                                final Offset localPosition =
+                                                    box.globalToLocal(
+                                                        details.globalPosition);
 
-                                          if (localPosition.dy < 20 &&
-                                              localPosition.dx < 100) {
-                                            // previos
-                                            viewmodel.onImageIndexChange(
-                                              cardIndex,
-                                              viewmodel.currentImageIndex - 1,
-                                            );
-                                          } else if (localPosition.dy < 20 &&
-                                              localPosition.dx > 300) {
-                                            viewmodel.onImageIndexChange(
-                                              cardIndex,
-                                              viewmodel.currentImageIndex + 1,
-                                            );
-                                          }
-                                        },
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          child: Container(
-                                            width: 340,
-                                            height: 600,
-                                            margin: const EdgeInsets.symmetric(
-                                              horizontal: 10,
-                                            ),
-                                            decoration: BoxDecoration(
+                                                if (localPosition.dy < 20 &&
+                                                    localPosition.dx < 100) {
+                                                  // previos
+                                                  viewmodel.onImageIndexChange(
+                                                    cardIndex,
+                                                    viewmodel
+                                                            .currentImageIndex -
+                                                        1,
+                                                  );
+                                                } else if (localPosition.dy <
+                                                        20 &&
+                                                    localPosition.dx > 300) {
+                                                  viewmodel.onImageIndexChange(
+                                                    cardIndex,
+                                                    viewmodel
+                                                            .currentImageIndex +
+                                                        1,
+                                                  );
+                                                }
+                                              },
+                                              child: ClipRRect(
                                                 borderRadius:
-                                                    BorderRadius.circular(
-                                                  20,
-                                                ),
-                                                border: Border.all(
-                                                  color:
-                                                      const Color(0xff3A3A3A),
-                                                )),
-                                            child: Stack(
-                                              children: [
-                                                Container(
+                                                    BorderRadius.circular(12),
+                                                child: Container(
                                                   width: 340,
                                                   height: 600,
+                                                  margin: const EdgeInsets
+                                                      .symmetric(
+                                                    horizontal: 10,
+                                                  ),
                                                   decoration: BoxDecoration(
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                    20,
-                                                  )),
-                                                  child: CachedNetworkImage(
-                                                    imageUrl: viewmodel
-                                                            .cardDatas[cardIndex]
-                                                            .images[
-                                                        viewmodel
-                                                            .currentImageIndex],
-                                                    width: 340,
-                                                    height: 600,
-                                                  
-                                                     fit: BoxFit.cover,
-                                                  imageBuilder:
-                                                      (context, imageprovier) {
-                                                    return Container(
-                                                      decoration:
-                                                          ShapeDecoration(
-                                                        image: DecorationImage(
-                                                            fit: BoxFit.cover,
-                                                            image:
-                                                                imageprovier),
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                            20,
-                                                          ),
-                                                        ),
+                                                        20,
                                                       ),
-                                                    );
-                                                  },
-                                                    placeholder:
-                                                        (context, url) =>
-                                                            Shimmer.fromColors(
-                                                      baseColor: Colors.grey,
-                                                      highlightColor:
-                                                          Colors.red,
-                                                      child: Container(
+                                                      border: Border.all(
+                                                        color: const Color(
+                                                            0xff3A3A3A),
+                                                      )),
+                                                  child: Stack(
+                                                    children: [
+                                                      Container(
                                                         width: 340,
                                                         height: 600,
                                                         decoration:
-                                                            ShapeDecoration(
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                              20,
+                                                            BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                          20,
+                                                        )),
+                                                        child:
+                                                            CachedNetworkImage(
+                                                          imageUrl: viewmodel
+                                                                  .cardDatas[
+                                                                      cardIndex]
+                                                                  .images[
+                                                              viewmodel
+                                                                  .currentImageIndex],
+                                                          width: 340,
+                                                          height: 600,
+                                                          fit: BoxFit.cover,
+                                                          imageBuilder: (context,
+                                                              imageprovier) {
+                                                            return Container(
+                                                              decoration:
+                                                                  ShapeDecoration(
+                                                                image: DecorationImage(
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                    image:
+                                                                        imageprovier),
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                    20,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                          placeholder: (context,
+                                                                  url) =>
+                                                              Shimmer
+                                                                  .fromColors(
+                                                            baseColor:
+                                                                Colors.grey,
+                                                            highlightColor:
+                                                                Colors.red,
+                                                            child: Container(
+                                                              width: 340,
+                                                              height: 600,
+                                                              decoration:
+                                                                  ShapeDecoration(
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                    20,
+                                                                  ),
+                                                                ),
+                                                              ),
                                                             ),
+                                                          ),
+                                                          errorWidget: (context,
+                                                                  url, error) =>
+                                                              const Icon(
+                                                            Icons.error,
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
-                                                    errorWidget:
-                                                        (context, url, error) =>
-                                                            const Icon(
-                                                      Icons.error,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Positioned(
-                                                  top: 16,
-                                                  left: 20,
-                                                  child: Container(
-                                                    width: 300,
-                                                    alignment:
-                                                        Alignment.topCenter,
-                                                    child:
-                                                        AnimatedSmoothIndicator(
-                                                      activeIndex: viewmodel
-                                                          .currentImageIndex,
-                                                      count: viewmodel
-                                                          .cardDatas[cardIndex]
-                                                          .images
-                                                          .length,
-                                                      curve: Curves.easeOutSine,
-                                                      onDotClicked: (int val) {
-                                                        viewmodel
-                                                            .onImageIndexChange(
-                                                          cardIndex,
-                                                          val,
-                                                        );
-                                                      },
-                                                      effect:
-                                                          const CustomizableEffect(
-                                                        spacing: 4,
-                                                        dotDecoration:
-                                                            DotDecoration(
-                                                          height: 3,
-                                                          width: 56.8,
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius
-                                                                      .circular(
-                                                                          1000)),
-                                                          color: Color(
-                                                            0xff202020,
-                                                          ),
-                                                        ),
-                                                        activeDotDecoration:
-                                                            DotDecoration(
-                                                          height: 3,
-                                                          width: 56.8,
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                            Radius.circular(
-                                                              1000,
-                                                            ),
-                                                          ),
-                                                          color: Color(
-                                                            0xffFF006B,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Positioned(
-                                                  bottom: 0,
-                                                  child: Visibility(
-                                                    visible: viewmodel
-                                                            .currentImageIndex ==
-                                                        0,
-                                                    child: MainProfileBodyOne(
-                                                      cardData: viewmodel
-                                                          .cardDatas[cardIndex],
-                                                    ),
-                                                  ),
-                                                ),
-                                                Positioned(
-                                                  bottom: 0,
-                                                  child: Visibility(
-                                                    visible: viewmodel
-                                                            .currentImageIndex ==
-                                                        1,
-                                                    child: MainProfileBodyTwo(
-                                                      cardData: viewmodel
-                                                          .cardDatas[cardIndex],
-                                                    ),
-                                                  ),
-                                                ),
-                                                Positioned(
-                                                  bottom: 0,
-                                                  child: Visibility(
-                                                    visible: viewmodel
-                                                                .currentImageIndex >=
-                                                            2 &&
-                                                        viewmodel
-                                                                .currentImageIndex <=
-                                                            viewmodel
+                                                      Positioned(
+                                                        top: 16,
+                                                        left: 20,
+                                                        child: Container(
+                                                          width: 300,
+                                                          alignment: Alignment
+                                                              .topCenter,
+                                                          child:
+                                                              AnimatedSmoothIndicator(
+                                                            activeIndex: viewmodel
+                                                                .currentImageIndex,
+                                                            count: viewmodel
                                                                 .cardDatas[
                                                                     cardIndex]
-                                                                .images[viewmodel
-                                                                    .currentImageIndex]
+                                                                .images
                                                                 .length,
-                                                    child: MainProfileBodyThree(
-                                                      cardData: viewmodel
-                                                          .cardDatas[cardIndex],
-                                                    ),
+                                                            curve: Curves
+                                                                .easeOutSine,
+                                                            onDotClicked:
+                                                                (int val) {
+                                                              viewmodel
+                                                                  .onImageIndexChange(
+                                                                cardIndex,
+                                                                val,
+                                                              );
+                                                            },
+                                                            effect:
+                                                                const CustomizableEffect(
+                                                              spacing: 4,
+                                                              dotDecoration:
+                                                                  DotDecoration(
+                                                                height: 3,
+                                                                width: 56.8,
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            1000)),
+                                                                color: Color(
+                                                                  0xff202020,
+                                                                ),
+                                                              ),
+                                                              activeDotDecoration:
+                                                                  DotDecoration(
+                                                                height: 3,
+                                                                width: 56.8,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .all(
+                                                                  Radius
+                                                                      .circular(
+                                                                    1000,
+                                                                  ),
+                                                                ),
+                                                                color: Color(
+                                                                  0xffFF006B,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Positioned(
+                                                        bottom: 0,
+                                                        child: Visibility(
+                                                          visible: viewmodel
+                                                                  .currentImageIndex ==
+                                                              0,
+                                                          child:
+                                                              MainProfileBodyOne(
+                                                            cardData: viewmodel
+                                                                    .cardDatas[
+                                                                cardIndex],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Positioned(
+                                                        bottom: 0,
+                                                        child: Visibility(
+                                                          visible: viewmodel
+                                                                  .currentImageIndex ==
+                                                              1,
+                                                          child:
+                                                              MainProfileBodyTwo(
+                                                            cardData: viewmodel
+                                                                    .cardDatas[
+                                                                cardIndex],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Positioned(
+                                                        bottom: 0,
+                                                        child: Visibility(
+                                                          visible: viewmodel
+                                                                      .currentImageIndex >=
+                                                                  2 &&
+                                                              viewmodel
+                                                                      .currentImageIndex <=
+                                                                  viewmodel
+                                                                      .cardDatas[
+                                                                          cardIndex]
+                                                                      .images[viewmodel
+                                                                          .currentImageIndex]
+                                                                      .length,
+                                                          child:
+                                                              MainProfileBodyThree(
+                                                            cardData: viewmodel
+                                                                    .cardDatas[
+                                                                cardIndex],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      )),
-                                ),
-                              );
+                                              ),
+                                            )),
+                                      ),
+                                    );
                             } else {
-                              return const Center(
-                                  child: const Text(
-                                "No Data",
-                              ));
+                              return EmptyCard();
                             }
                           }
                         }),
@@ -587,6 +635,3 @@ class _HomePageState extends State<HomePage> {
         });
   }
 }
-
-
-
