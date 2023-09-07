@@ -42,7 +42,7 @@ class BasePage extends StatelessWidget {
                     label: "홈",
                   ),
                   BottomNavigationBarItem(
-                    icon: Image.asset(AppImages.lcationIcon),
+                    icon: Image.asset(AppImages.locationIcon),
                     label: "스팟",
                   ),
                   const BottomNavigationBarItem(
