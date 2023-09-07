@@ -146,160 +146,359 @@ class _HomePageState extends State<HomePage> {
                           } else {
                             if (snapshot.hasData) {
                               viewmodel.onParseData(snapshot.data!);
-                              return ListView.builder(
-                                  itemCount: viewmodel.cardDatas.length,
-                                  controller: viewmodel.pageController,
-                                  scrollDirection: Axis.horizontal,
-                                  //  physics: NeverScrollableScrollPhysics(),
-                                  shrinkWrap: false,
-                                  itemBuilder: (context, index) {
-                                    return GestureDetector(
-                                      onTap: () {},
-                                      child: Container(
-                                        width: 340,
-                                        height: 600,
-                                        margin: const EdgeInsets.symmetric(
-                                          horizontal: 10,
-                                        ),
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(
-                                              20,
-                                            ),
-                                            border: Border.all(
-                                              color: Color(0xff3A3A3A),
-                                            )),
-                                        child: Stack(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {
-                                                viewmodel.currentImageIndex =
-                                                    1 +
-                                                        viewmodel
-                                                            .currentImageIndex;
-                                                viewmodel.notifyListeners();
-                                              },
-                                              child: Container(
-                                                width: 340,
-                                                height: 600,
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                  20,
-                                                )),
-                                                child: CachedNetworkImage(
-                                                  imageUrl: viewmodel
-                                                      .cardDatas[index]
-                                                      .images[0],
+
+                              return ListView(
+                                scrollDirection: Axis.horizontal,
+                                children: List.generate(
+                                  viewmodel.cardDatas.length,
+                                  (index) => Draggable(
+                                      onDragEnd: viewmodel.onCardDrag,
+                                      feedback: GestureDetector(
+                                        onTapDown: (TapDownDetails details) {
+                                          final double x =
+                                              details.localPosition.dx;
+                                          final double y =
+                                              details.localPosition.dy;
+
+                                          if (x < 50 && y < 50) {
+                                            if (viewmodel.cardIndex > 0) {
+                                              viewmodel.removeCard(
+                                                  viewmodel.cardIndex);
+                                            }
+                                          } else if (x > 250 && y < 50) {
+                                            if (viewmodel.cardIndex <
+                                                viewmodel.cardDatas.length -
+                                                    1) {
+                                              viewmodel.removeCard(
+                                                  viewmodel.cardIndex);
+                                            }
+                                          }
+                                        },
+                                        child: Container(
+                                          width: 340,
+                                          height: 600,
+                                          margin: const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                          ),
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                20,
+                                              ),
+                                              border: Border.all(
+                                                color: Color(0xff3A3A3A),
+                                              )),
+                                          child: Stack(
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () {
+                                                  viewmodel.currentImageIndex =
+                                                      1 +
+                                                          viewmodel
+                                                              .currentImageIndex;
+                                                  viewmodel.notifyListeners();
+                                                },
+                                                child: Container(
                                                   width: 340,
                                                   height: 600,
-                                                  fit: BoxFit.fill,
-                                                  placeholder: (context, url) =>
-                                                      Shimmer.fromColors(
-                                                    baseColor: Colors.grey,
-                                                    highlightColor: Colors.red,
-                                                    child: Container(
-                                                      width: 340,
-                                                      height: 600,
-                                                      decoration:
-                                                          ShapeDecoration(
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                            20,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                    20,
+                                                  )),
+                                                  child: CachedNetworkImage(
+                                                    imageUrl: viewmodel
+                                                        .cardDatas[index]
+                                                        .images[0],
+                                                    width: 340,
+                                                    height: 600,
+                                                    fit: BoxFit.fill,
+                                                    placeholder:
+                                                        (context, url) =>
+                                                            Shimmer.fromColors(
+                                                      baseColor: Colors.grey,
+                                                      highlightColor:
+                                                          Colors.red,
+                                                      child: Container(
+                                                        width: 340,
+                                                        height: 600,
+                                                        decoration:
+                                                            ShapeDecoration(
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                              20,
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
                                                     ),
-                                                  ),
-                                                  errorWidget:
-                                                      (context, url, error) =>
-                                                          const Icon(
-                                                    Icons.error,
+                                                    errorWidget:
+                                                        (context, url, error) =>
+                                                            const Icon(
+                                                      Icons.error,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                            Positioned(
-                                              top: 16,
-                                              left: 20,
-                                              child: Container(
-                                                width: 300,
-                                                alignment: Alignment.topCenter,
-                                                child: AnimatedSmoothIndicator(
-                                                  activeIndex: viewmodel
-                                                      .currentImageIndex,
-                                                  count: viewmodel
-                                                      .cardDatas[index]
-                                                      .images
-                                                      .length,
-                                                  curve: Curves.easeOutSine,
-                                                  effect:
-                                                      const CustomizableEffect(
-                                                    spacing: 4,
-                                                    dotDecoration:
-                                                        DotDecoration(
-                                                      height: 3,
-                                                      width: 56.8,
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  1000)),
-                                                      color: Color(
-                                                        0xff202020,
-                                                      ),
-                                                    ),
-                                                    activeDotDecoration:
-                                                        DotDecoration(
-                                                      height: 3,
-                                                      width: 56.8,
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                        Radius.circular(
-                                                          1000,
+                                              Positioned(
+                                                top: 16,
+                                                left: 20,
+                                                child: Container(
+                                                  width: 300,
+                                                  alignment:
+                                                      Alignment.topCenter,
+                                                  child:
+                                                      AnimatedSmoothIndicator(
+                                                    activeIndex: viewmodel
+                                                        .currentImageIndex,
+                                                    count: viewmodel
+                                                        .cardDatas[index]
+                                                        .images
+                                                        .length,
+                                                    curve: Curves.easeOutSine,
+                                                    effect:
+                                                        const CustomizableEffect(
+                                                      spacing: 4,
+                                                      dotDecoration:
+                                                          DotDecoration(
+                                                        height: 3,
+                                                        width: 56.8,
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    1000)),
+                                                        color: Color(
+                                                          0xff202020,
                                                         ),
                                                       ),
-                                                      color: Color(
-                                                        0xffFF006B,
+                                                      activeDotDecoration:
+                                                          DotDecoration(
+                                                        height: 3,
+                                                        width: 56.8,
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                          Radius.circular(
+                                                            1000,
+                                                          ),
+                                                        ),
+                                                        color: Color(
+                                                          0xffFF006B,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                            Positioned(
-                                              bottom: 0,
-                                              child: Visibility(
-                                                visible: viewmodel
-                                                        .currentImageIndex ==
-                                                    0,
-                                                child: MainProfileBodyOne(),
+                                              Positioned(
+                                                bottom: 0,
+                                                child: Visibility(
+                                                  visible: viewmodel
+                                                          .currentImageIndex ==
+                                                      0,
+                                                  child: MainProfileBodyOne(),
+                                                ),
                                               ),
-                                            ),
-                                            Positioned(
-                                              bottom: 0,
-                                              child: Visibility(
-                                                visible: viewmodel
-                                                        .currentImageIndex ==
-                                                    1,
-                                                child: MainProfileBodyTwo(),
+                                              Positioned(
+                                                bottom: 0,
+                                                child: Visibility(
+                                                  visible: viewmodel
+                                                          .currentImageIndex ==
+                                                      1,
+                                                  child: MainProfileBodyTwo(),
+                                                ),
                                               ),
-                                            ),
-                                            Positioned(
-                                              bottom: 0,
-                                              child: Visibility(
-                                                visible: viewmodel
-                                                        .currentImageIndex ==
-                                                    2,
-                                                child: MainProfileBodyThree(),
+                                              Positioned(
+                                                bottom: 0,
+                                                child: Visibility(
+                                                  visible: viewmodel
+                                                          .currentImageIndex ==
+                                                      2,
+                                                  child: MainProfileBodyThree(),
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    );
-                                  });
+                                      child: GestureDetector(
+                                        onTapDown: (TapDownDetails details) {
+                                          final double x =
+                                              details.localPosition.dx;
+                                          final double y =
+                                              details.localPosition.dy;
+
+                                          // Check if tapped on the left-top corner
+                                          if (x < 50 && y < 50) {
+                                            if (viewmodel.cardIndex > 0) {
+                                              viewmodel.removeCard(
+                                                  viewmodel.cardIndex);
+                                              viewmodel.notifyListeners();
+                                            }
+                                          }
+                                          // Check if tapped on the right-top corner
+                                          // else if (x > 250 && y < 50) {
+                                          //   if (viewmodel.cardIndex <
+                                          //       viewmodel.cardDatas.length -
+                                          //           1) {
+                                          //     viewmodel.showCard(
+                                          //         viewmodel.cardIndex + 1);
+                                          //   }
+                                          // }
+                                        },
+                                        child: Container(
+                                          width: 340,
+                                          height: 600,
+                                          margin: const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                          ),
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                20,
+                                              ),
+                                              border: Border.all(
+                                                color: Color(0xff3A3A3A),
+                                              )),
+                                          child: Stack(
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () {
+                                                  viewmodel.currentImageIndex =
+                                                      1 +
+                                                          viewmodel
+                                                              .currentImageIndex;
+                                                  viewmodel.notifyListeners();
+                                                },
+                                                child: Container(
+                                                  width: 340,
+                                                  height: 600,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                    20,
+                                                  )),
+                                                  child: CachedNetworkImage(
+                                                    imageUrl: viewmodel
+                                                        .cardDatas[index]
+                                                        .images[0],
+                                                    width: 340,
+                                                    height: 600,
+                                                    fit: BoxFit.fill,
+                                                    placeholder:
+                                                        (context, url) =>
+                                                            Shimmer.fromColors(
+                                                      baseColor: Colors.grey,
+                                                      highlightColor:
+                                                          Colors.red,
+                                                      child: Container(
+                                                        width: 340,
+                                                        height: 600,
+                                                        decoration:
+                                                            ShapeDecoration(
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                              20,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    errorWidget:
+                                                        (context, url, error) =>
+                                                            const Icon(
+                                                      Icons.error,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Positioned(
+                                                top: 16,
+                                                left: 20,
+                                                child: Container(
+                                                  width: 300,
+                                                  alignment:
+                                                      Alignment.topCenter,
+                                                  child:
+                                                      AnimatedSmoothIndicator(
+                                                    activeIndex: viewmodel
+                                                        .currentImageIndex,
+                                                    count: viewmodel
+                                                        .cardDatas[index]
+                                                        .images
+                                                        .length,
+                                                    curve: Curves.easeOutSine,
+                                                    effect:
+                                                        const CustomizableEffect(
+                                                      spacing: 4,
+                                                      dotDecoration:
+                                                          DotDecoration(
+                                                        height: 3,
+                                                        width: 56.8,
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    1000)),
+                                                        color: Color(
+                                                          0xff202020,
+                                                        ),
+                                                      ),
+                                                      activeDotDecoration:
+                                                          DotDecoration(
+                                                        height: 3,
+                                                        width: 56.8,
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                          Radius.circular(
+                                                            1000,
+                                                          ),
+                                                        ),
+                                                        color: Color(
+                                                          0xffFF006B,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Positioned(
+                                                bottom: 0,
+                                                child: Visibility(
+                                                  visible: viewmodel
+                                                          .currentImageIndex ==
+                                                      0,
+                                                  child: MainProfileBodyOne(),
+                                                ),
+                                              ),
+                                              Positioned(
+                                                bottom: 0,
+                                                child: Visibility(
+                                                  visible: viewmodel
+                                                          .currentImageIndex ==
+                                                      1,
+                                                  child: MainProfileBodyTwo(),
+                                                ),
+                                              ),
+                                              Positioned(
+                                                bottom: 0,
+                                                child: Visibility(
+                                                  visible: viewmodel
+                                                          .currentImageIndex ==
+                                                      2,
+                                                  child: MainProfileBodyThree(),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      )),
+                                ),
+                              );
                             } else {
                               return Text("No Data");
                             }

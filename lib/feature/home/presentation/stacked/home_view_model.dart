@@ -18,6 +18,7 @@ class HomeViewModel extends MyBaseViewModel {
   List<CardData> cardDatas = [];
   late Stream<DatabaseEvent> stream;
   int currentImageIndex = 0;
+  int cardIndex = 0;
   @override
   initialise() async {
     setBusy(true);
@@ -37,5 +38,20 @@ class HomeViewModel extends MyBaseViewModel {
 
       cardDatas.add(CardData.fromJson(jsonVal));
     }
+  }
+
+  void onCardDrag(DraggableDetails details) {
+    if (details.offset.dx < -100 || details.offset.dy > 100) {
+      if (cardIndex < cardDatas.length - 1) {
+        removeCard(cardIndex);
+      }
+    }
+  }
+
+  void removeCard(int index) {
+    if (index >= 0 && index < cardDatas.length) {
+      cardDatas.removeAt(index);
+    }
+    notifyListeners();
   }
 }
