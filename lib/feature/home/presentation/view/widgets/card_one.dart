@@ -110,13 +110,19 @@ class MainProfileBodyOne extends StatelessWidget {
           width: 340,
           height: 60,
           decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.05),
-          ),
-          child: const Icon(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                Colors.white.withOpacity(0.0),
+                Colors.black.withOpacity(0.2),
+                Colors.black.withOpacity(0.6),
+              ])),
+          child: Icon(
             Icons.keyboard_arrow_down,
             color: Colors.white,
           ),
-        )
+        ),
       ],
     );
   }
